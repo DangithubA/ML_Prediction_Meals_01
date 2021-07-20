@@ -60,7 +60,7 @@ def linear_model(dataset_dict,columns,descr,plot=False):
 	#
 	if plot:
 		opt_num = len(gs.cv_results_['params'])
-		line_list = ['r-','b-','g-','y-']
+		line_list = ['r-', 'b-', 'g-', 'y-', 'o-', 'v-']
 		for opt in range(opt_num):
 			descr_plot = ""
 			for par in gs.cv_results_['params'][opt].items():
@@ -143,7 +143,8 @@ def lr_ensemble(dataset_dict,columns,descr,hyper_params,plot=False):
 	#
 	linear_model = lr = ElasticNet(l1_ratio=hyper_params['l1_ratio'],
 					random_state=314,
-					max_iter=1000,
+					max_iter=2000,
+					alpha=0.1,
 					normalize=hyper_params['normalize']
 					)
 	"""
