@@ -110,7 +110,7 @@ def linear_model(dataset_dict, columns, descr, plot=False):
     # print(caption+" Root Mean Squared Error:", np.sqrt(metrics.mean_squared_error(Y_true, Y_pred)))
 
     if plot:
-        plt.plot(Y_pred, (Y_true - Y_pred) / Y_true, 'o')
+        plt.plot(Y_pred, (Y_pred - Y_true) / Y_true, 'o')
         plt.hlines(0, xmin=min(Y_pred), xmax=max(Y_pred), linestyles='--')
         plt.title('Residual % Plot ' + caption)
         plt.show()
@@ -200,11 +200,11 @@ def lr_ensemble(dataset_dict, columns, descr, hyper_params, plot=False):
                            loss='linear',
                            n_estimators=5,
                            learning_rate=1)
-    lr = BaggingRegressor(base_estimator=linear_model,
-                          bootstrap=True,
-                          random_state=314,
-                          n_estimators=5
-                          )
+    #lr = BaggingRegressor(base_estimator=linear_model,
+    #                      bootstrap=True,
+    #                      random_state=314,
+    #                      n_estimators=5
+    #                      )
     start_time = time.process_time()
     lr.fit(X_train, Y_train)
     end_time = time.process_time()
@@ -228,7 +228,7 @@ def lr_ensemble(dataset_dict, columns, descr, hyper_params, plot=False):
     print(caption + " TRAIN Error on " + dataset_type + " (MAE) = ", score)
 
     if plot:
-        plt.plot(Y_pred, (Y_true - Y_pred) / Y_true, 'o')
+        plt.plot(Y_pred, (Y_pred - Y_true) / Y_true, 'o')
         plt.hlines(0, xmin=min(Y_pred), xmax=max(Y_pred), linestyles='--')
         plt.title('Residual % Plot ' + caption)
         plt.show()
