@@ -195,16 +195,16 @@ def lr_ensemble(dataset_dict, columns, descr, hyper_params, plot=False):
     #
     # Senza Grid Search: full training con iperparamentei di default
     #
-    lr = AdaBoostRegressor(base_estimator=linear_model,
-                           random_state=314,
-                           loss='linear',
-                           n_estimators=5,
-                           learning_rate=1)
-    #lr = BaggingRegressor(base_estimator=linear_model,
-    #                      bootstrap=True,
-    #                      random_state=314,
-    #                      n_estimators=5
-    #                      )
+    #lr = AdaBoostRegressor(base_estimator=linear_model,
+    #                       random_state=314,
+    #                       loss='linear',
+    #                       n_estimators=5,
+    #                       learning_rate=1)
+    lr = BaggingRegressor(base_estimator=linear_model,
+                          bootstrap=True,
+                          random_state=314,
+                          n_estimators=5
+                          )
     start_time = time.process_time()
     lr.fit(X_train, Y_train)
     end_time = time.process_time()
