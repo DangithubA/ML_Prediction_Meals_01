@@ -72,6 +72,8 @@ def linear_model(dataset_dict, columns, descr, plot=False):
                 data_list.append(gs.cv_results_['split' + str(fold) + '_test_score'][opt])
             plt.plot([1, 2, 3, 4, 5], data_list, line_list[opt], label=descr_plot)
         plt.legend()
+        #plt.savefig('Linear_' + descr + '_Gridsearch')
+        #plt.close()
         plt.show()
     #
     # dopo grid search: training completo con gli hyperparameters selezionati
@@ -113,6 +115,8 @@ def linear_model(dataset_dict, columns, descr, plot=False):
         plt.plot(Y_pred, (Y_pred - Y_true) / Y_true, 'o')
         plt.hlines(0, xmin=min(Y_pred), xmax=max(Y_pred), linestyles='--')
         plt.title('Residual % Plot ' + caption)
+        #plt.savefig('Linear_' + descr)
+        #plt.close()
         plt.show()
         """
         df = pd.DataFrame({'Actual': Y_true, 'Predicted': Y_pred})
@@ -231,6 +235,8 @@ def lr_ensemble(dataset_dict, columns, descr, hyper_params, plot=False):
         plt.plot(Y_pred, (Y_pred - Y_true) / Y_true, 'o')
         plt.hlines(0, xmin=min(Y_pred), xmax=max(Y_pred), linestyles='--')
         plt.title('Residual % Plot ' + caption)
+        #plt.savefig('Linear_Ensemble_' + descr)
+        #plt.close()
         plt.show()
         """
         df = pd.DataFrame({'Actual': Y_true, 'Predicted': Y_pred})

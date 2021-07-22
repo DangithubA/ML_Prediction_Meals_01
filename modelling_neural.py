@@ -10,7 +10,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.preprocessing import MinMaxScaler, Normalizer, StandardScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import AdaBoostRegressor
-
+from sklearn.ensemble import BaggingRegressor
 
 from sklearn import metrics
 
@@ -39,7 +39,7 @@ def neural_model(dataset_dict,gridsearch_dict,descr,plot=False):
 	#
 	# GRID SEARCH E TRAINING
 	#
-	# utilizza il dataset ridooto per gridsearch (gridSearch tiene da parte un dataset di validazione per misurare la performance con differenti parameteri)
+	# utilizza il dataset ridotto per gridsearch (gridSearch tiene da parte un dataset di validazione per misurare la performance con differenti parameteri)
 	estimator = MLPRegressor(random_state=314,
 							max_iter=500,
 							solver='adam',
@@ -73,7 +73,9 @@ def neural_model(dataset_dict,gridsearch_dict,descr,plot=False):
 				data_list.append(gs.cv_results_['split'+str(fold)+'_test_score'][opt])
 			plt.plot([1,2,3,4,5], data_list, line_list[opt], label=descr_plot)
 		plt.legend()
-		plt.show()	
+		#plt.savefig('Neural_' + descr + '_Gridsearch')
+		#plt.close()
+		plt.show()
 	#
 	# dopo grid search: full training con gli hyperparameters selezionati
 	#
@@ -104,9 +106,11 @@ def neural_model(dataset_dict,gridsearch_dict,descr,plot=False):
 	#print(caption+" Root Mean Squared Error:", np.sqrt(metrics.mean_squared_error(Y_true, Y_pred)))
 
 	if plot:
-		plt.plot(Y_pred, (Y_true - Y_pred)/Y_true, 'o')
+		plt.plot(Y_pred, (Y_pred - Y_true)/Y_true, 'o')
 		plt.hlines(0, xmin=min(Y_pred), xmax=max(Y_pred), linestyles='--')
 		plt.title('Residual % Plot '+caption)
+		#plt.savefig('Neural_' + descr)
+		#plt.close()
 		plt.show()
 		"""
 		df = pd.DataFrame({'Actual': Y_true, 'Predicted': Y_pred})
@@ -195,11 +199,16 @@ def nnm_ensemble(dataset_dict,gridsearch_dict,descr,hyper_params,plot=False):
 	# Senza grid search: Training con parametri di default
 	#
 	print('Training con gli iper-parametri di default',caption.upper(),'ENSEMBLE')
-	nnm = AdaBoostRegressor (base_estimator=nnm_model,
-							random_state=314,
-							loss='linear',
-							n_estimators=3, 
-							learning_rate=1)
+	#nnm = AdaBoostRegressor (base_estimator=nnm_model,
+	#						random_state=314,
+	#						loss='linear',
+	#						n_estimators=3,
+	#						learning_rate=1)
+	nnm = BaggingRegressor(base_estimator=nnm_model,
+						  bootstrap=True,
+						  random_state=314,
+						  n_estimators=5
+						  )
 	start_time = time.process_time()
 	nnm.fit(X_train, Y_train)
 	end_time = time.process_time()
@@ -218,9 +227,11 @@ def nnm_ensemble(dataset_dict,gridsearch_dict,descr,hyper_params,plot=False):
 	#print(caption+" Root Mean Squared Error:", np.sqrt(metrics.mean_squared_error(Y_true, Y_pred)))
 
 	if plot:
-		plt.plot(Y_pred, (Y_true - Y_pred)/Y_true, 'o')
+		plt.plot(Y_pred, (Y_pred - Y_true)/Y_true, 'o')
 		plt.hlines(0, xmin=min(Y_pred), xmax=max(Y_pred), linestyles='--')
 		plt.title('Residual % Plot '+caption)
+		#plt.savefig('Neural_Ensemble_' + descr)
+		#plt.close()
 		plt.show()
 		"""
 		df = pd.DataFrame({'Actual': Y_true, 'Predicted': Y_pred})
